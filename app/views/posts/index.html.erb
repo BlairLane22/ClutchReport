@@ -1,0 +1,41 @@
+<% content_for :title, "All Posts" %>
+
+<div class="posts-header">
+  <h1>All Posts</h1>
+  <% if user_signed_in? %>
+    <%= link_to "New Post", new_post_path, class: "btn btn-primary" %>
+  <% end %>
+</div>
+
+<div class="posts-container">
+  <% if @posts.any? %>
+    <% @posts.each do |post| %>
+      <article class="post-card">
+        <% if post.photo.attached? %>
+          <div class="post-card-image">
+            <%= image_tag post.photo, alt: post.title, class: "card-image" %>
+          </div>
+        <% end %>
+        <div class="post-card-content">
+          <h2><%= link_to post.title, post_path(post) %></h2>
+          <p class="post-meta">
+            By <%= post.user.first_name.present? ? post.user.first_name : post.user.email %>
+            in <%= link_to post.category.name, category_path(post.category) %>
+            • <%= post.created_at.strftime("%B %d, %Y") %>
+          </p>
+          <p><%= post.excerpt %></p>
+          <div class="post-actions">
+            <%= link_to "Read More", post_path(post), class: "btn btn-secondary" %>
+            <% if current_user == post.user %>
+              <%= link_to "Edit", edit_post_path(post), class: "btn btn-sm" %>
+              <%= link_to "Delete", post_path(post), method: :delete, 
+                  confirm: "Are you sure?", class: "btn btn-danger btn-sm" %>
+            <% end %>
+          </div>
+        </div>
+      </article>
+    <% end %>
+  <% else %>
+    <p>No posts available yet.</p>
+  <% end %>
+</div>

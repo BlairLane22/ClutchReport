@@ -1,0 +1,40 @@
+<% content_for :title, @category.name %>
+
+<div class="category-header">
+  <h1 style="color: <%= @category.color %>"><%= @category.name %></h1>
+  <p><%= @category.description %></p>
+</div>
+
+<div class="posts-container">
+  <% if @posts.any? %>
+    <div class="posts-grid">
+      <% @posts.each do |post| %>
+        <article class="post-card">
+          <% if post.photo.attached? %>
+            <div class="post-card-image">
+              <%= image_tag post.photo, alt: post.title, class: "card-image" %>
+            </div>
+          <% end %>
+          <div class="post-card-content">
+            <h3><%= link_to post.title, post_path(post) %></h3>
+            <p class="post-meta">
+              By <%= post.user.first_name %>
+              • <%= post.created_at.strftime("%B %d, %Y") %>
+            </p>
+            <p><%= post.excerpt %></p>
+            <div class="post-actions">
+              <%= link_to "Read More", post_path(post), class: "btn btn-secondary" %>
+            </div>
+            <div class="post-card-likes">
+              <%= post.likes.count %>
+            </div>
+          </div>
+        </article>
+      <% end %>
+    </div>
+  <% else %>
+    <p>No posts in this category yet.</p>
+  <% end %>
+</div>
+
+<%= link_to "All Categories", categories_path, class: "btn btn-secondary" %>

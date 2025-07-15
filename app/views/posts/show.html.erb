@@ -1,0 +1,82 @@
+<% content_for :title, @post.title %>
+
+<article class="post-detail">
+  <header class="post-header">
+    <h1><%= @post.title %></h1>
+    <p class="post-meta">
+      By <%= @post.user.first_name %>
+      in <%= link_to @post.category.name, category_path(@post.category) %>
+      • <%= @post.created_at.strftime("%B %d, %Y") %>
+    </p>
+    <% if current_user == @post.user %>
+      <div class="post-actions">
+        <%= link_to "Edit", edit_post_path(@post), class: "btn btn-secondary" %>
+        <%= link_to "Delete", post_path(@post), method: :delete, 
+            confirm: "Are you sure?", class: "btn btn-danger" %>
+      </div>
+    <% end %>
+  </header>
+
+  <% if @post.photo.attached? %>
+    <div class="post-photo">
+      <%= image_tag @post.photo, alt: @post.title, class: "post-image" %>
+    </div>
+  <% end %>
+
+  <div class="post-content">
+    <%= simple_format(@post.content) %>
+  </div>
+
+  <div class="post-engagement">
+    <div class="like-section" id="like-section-<%= @post.id %>">
+      <% if user_signed_in? %>
+        <% user_like = @post.likes.find_by(user: current_user) %>
+        <% if user_like %>
+          <%= button_to "Unlike", [@post, user_like], 
+              method: :delete, class: "btn btn-unlike", form: { style: "display: inline;" } %>
+        <% else %>
+          <%= button_to "Like", [@post, :likes], method: :post, class: "btn btn-like", form: { style: "display: inline;" } %>
+        <% end %>
+      <% else %>
+        <% session_like = @post.likes.find_by(session_id: session.id.to_s) %>
+        <% if session_like %>
+          <%= button_to "Unlike", [@post, session_like], 
+              method: :delete, class: "btn btn-unlike", form: { style: "display: inline;" } %>
+        <% else %>
+          <%= button_to "Like", [@post, :likes], method: :post, class: "btn btn-like", form: { style: "display: inline;" } %>
+        <% end %>
+      <% end %>
+      
+      <span class="like-count"><%= @post.likes.count %></span>
+    </div>
+  </div>
+</article>
+
+<section class="comments-section">
+  <h3>Comments (<%= @comments.count %>)</h3>
+  
+  <% if user_signed_in? %>
+    <%= form_with model: [@post, @comment], local: true do |form| %>
+      <div class="form-group">
+        <%= form.text_area :content, placeholder: "Add a comment...", rows: 3 %>
+      </div>
+      <%= form.submit "Post Comment", class: "btn btn-primary" %>
+    <% end %>
+  <% end %>
+
+  <div class="comments-list">
+    <% @comments.each do |comment| %>
+      <div class="comment">
+        <p><%= simple_format(comment.content) %></p>
+        <p class="comment-meta">
+          By <%= comment.user.first_name %>
+          • <%= comment.created_at.strftime("%B %d, %Y at %I:%M %p") %>
+          <% if current_user == comment.user %>
+            <%= link_to "Delete", [@post, comment], method: :delete, 
+                confirm: "Are you sure?", class: "delete-link" %>
+          <% end %>
+        </p>
+      </div>
+    <% end %>
+  </div>
+</section>

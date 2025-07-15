@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= content_for(:title) || "ClutchReport" %></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= yield :head %>
+
+    <link rel="icon" href="/icon.png" type="image/png">
+    <link rel="icon" href="/icon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="/icon.png">
+
+    <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+  </head>
+
+  <body>
+    <nav class="navbar">
+      <div class="nav-container">
+        <%= link_to "ClutchReport", root_path, class: "nav-brand" %>
+        
+        <div class="nav-links">
+          <%= link_to "Home", root_path %>
+          <%= link_to "Posts", posts_path %>
+          
+          <div class="dropdown">
+            <a href="#" class="dropdown-toggle">Categories</a>
+            <div class="dropdown-menu">
+              <%= link_to "All Categories", categories_path %>
+              <% Category.all.each do |category| %>
+                <%= link_to category.name, category_path(category) %>
+              <% end %>
+            </div>
+          </div>
+          
+          <% if user_signed_in? %>
+            <%= link_to "New Post", new_post_path %>
+            <%= link_to "Profile", edit_user_registration_path %>
+            <%= button_to "Logout", destroy_user_session_path, method: :delete, 
+                class: "logout-btn", form: { style: "display: inline;" } %>
+          <% else %>
+            <%= link_to "Login", new_user_session_path %>
+            <%= link_to "Sign Up", new_user_registration_path %>
+          <% end %>
+        </div>
+      </div>
+    </nav>
+
+    <main class="main-content">
+      <% if notice %>
+        <div class="alert alert-success"><%= notice %></div>
+      <% end %>
+      
+      <% if alert %>
+        <div class="alert alert-danger"><%= alert %></div>
+      <% end %>
+
+      <%= yield %>
+    </main>
+
+    <footer class="footer">
+      <p>&copy; <%= Date.current.year %> ClutchReport. All rights reserved.</p>
+    </footer>
+  </body>
+</html>

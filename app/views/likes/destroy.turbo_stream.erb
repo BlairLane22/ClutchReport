@@ -1,0 +1,27 @@
+<%= turbo_stream.replace "like-section-#{@post.id}" do %>
+  <div class="like-section" id="like-section-<%= @post.id %>">
+    <% if user_signed_in? %>
+      <% user_like = @post.likes.find_by(user: current_user) %>
+      <% if user_like %>
+        <%= button_to "Unlike", [@post, user_like], 
+            method: :delete, class: "btn btn-unlike", 
+            form: { style: "display: inline;", data: { turbo_method: :delete } } %>
+      <% else %>
+        <%= button_to "Like", [@post, :likes], method: :post, class: "btn btn-like", 
+            form: { style: "display: inline;" } %>
+      <% end %>
+    <% else %>
+      <% session_like = @post.likes.find_by(session_id: session.id.to_s) %>
+      <% if session_like %>
+        <%= button_to "Unlike", [@post, session_like], 
+            method: :delete, class: "btn btn-unlike", 
+            form: { style: "display: inline;", data: { turbo_method: :delete } } %>
+      <% else %>
+        <%= button_to "Like", [@post, :likes], method: :post, class: "btn btn-like", 
+            form: { style: "display: inline;" } %>
+      <% end %>
+    <% end %>
+    
+    <span class="like-count"><%= @post.likes.count %></span>
+  </div>
+<% end %>

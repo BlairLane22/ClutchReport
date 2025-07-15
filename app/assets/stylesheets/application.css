@@ -1,0 +1,14 @@
+/*
+ * This is a manifest file that'll be compiled into application.css.
+ */
+
+/*= require base */
+/*= require navigation */
+/*= require components/buttons */
+/*= require components/alerts */
+/*= require posts */
+/*= require categories */
+/*= require forms */
+/*= require comments */
+/*= require home */
+/*= require responsive */

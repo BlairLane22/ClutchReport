@@ -1,0 +1,116 @@
+<% content_for :title, "Welcome to Sports Blog" %>
+
+<div class="categories-nav">
+  <h2>Browse by Sport</h2>
+  <% if @categories.any? %>
+    <div class="category-nav-list">
+      <% @categories.each do |category| %>
+        <%= link_to category.name, category_path(category), 
+            class: "category-nav-item", 
+            style: "border-color: #{category.color}; color: #{category.color}" %>
+      <% end %>
+    </div>
+  <% end %>
+</div>
+
+<!-- Ad Space - Top Banner -->
+<div class="ad-space ad-banner">
+  <p>Advertisement</p>
+</div>
+
+<div class="highlights-section">
+  <h2>Featured Highlights</h2>
+  
+  <% if @highlights.any? %>
+    <div class="highlights-slider">
+      <button class="slider-btn slider-prev" onclick="slideHighlights(-1)">‹</button>
+      <div class="highlights-container">
+        <div class="highlights-track" id="highlightsTrack">
+          <% @highlights.each do |post| %>
+            <article class="highlight-slide">
+              <% if post.photo.attached? %>
+                <div class="highlight-image">
+                  <%= image_tag post.photo, alt: post.title, class: "highlight-img" %>
+                </div>
+              <% end %>
+              <div class="highlight-content">
+                <span class="highlight-badge">Featured</span>
+                <h3><%= link_to post.title, post_path(post) %></h3>
+                <p class="post-meta">
+                  By <%= post.user.first_name %>
+                  in <%= link_to post.category.name, category_path(post.category) %>
+                </p>
+                <p><%= post.excerpt %></p>
+                <div class="post-card-likes">
+                  <%= post.likes.count %>
+                </div>
+              </div>
+            </article>
+          <% end %>
+        </div>
+      </div>
+      <button class="slider-btn slider-next" onclick="slideHighlights(1)">›</button>
+    </div>
+    
+    <div class="slider-dots">
+      <% @highlights.each_with_index do |_, index| %>
+        <button class="slider-dot <%= 'active' if index == 0 %>" onclick="goToSlide(<%= index %>)"></button>
+      <% end %>
+    </div>
+  <% end %>
+</div>
+
+<div class="recent-posts">
+  <div class="recent-posts-header">
+    <h2>Recent Posts</h2>
+    <div class="sort-dropdown">
+      <%= form_with url: root_path, method: :get, local: true, class: "sort-form" do |form| %>
+        <%= form.select :sort, 
+            options_for_select([
+              ['Latest', 'latest'],
+              ['Most Liked', 'most_liked'],
+              ['Oldest', 'oldest'],
+              ['Title A-Z', 'title_asc'],
+              ['Title Z-A', 'title_desc']
+            ], params[:sort] || 'latest'),
+            {},
+            { class: "sort-select", onchange: "this.form.submit();" } %>
+      <% end %>
+    </div>
+  </div>
+  
+  <% if @recent_posts.any? %>
+    <div class="posts-grid">
+      <% @recent_posts.each_with_index do |post, index| %>
+        <% if index == 4 %>
+          <div class="ad-space ad-square">
+            <p>Advertisement</p>
+          </div>
+        <% end %>
+        
+        <article class="post-card">
+          <% if post.photo.attached? %>
+            <div class="post-card-image">
+              <%= image_tag post.photo, alt: post.title, class: "card-image" %>
+            </div>
+          <% end %>
+          <div class="post-card-content">
+            <h3><%= link_to post.title, post_path(post) %></h3>
+            <p class="post-meta">
+              By <%= post.user.first_name %>
+              in <%= link_to post.category.name, category_path(post.category) %>
+            </p>
+            <div class="post-card-likes">
+              <%= post.likes.count %>
+            </div>
+          </div>
+        </article>
+      <% end %>
+    </div>
+  <% end %>
+</div>
+
+<!-- Sidebar Ad Space -->
+<div class="ad-space ad-sidebar">
+  <p>Advertisement</p>
+</div>

@@ -1,0 +1,52 @@
+<% content_for :title, "New Post" %>
+
+<div style="max-width: 800px; margin: 0 auto;">
+  <div style="background: white; border-radius: 1rem; padding: 3rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
+    <h1 style="color: #1f2937; margin-bottom: 2rem; font-size: 2rem;">Create New Post</h1>
+
+    <%= form_with model: @post, local: true do |form| %>
+      <% if @post.errors.any? %>
+        <div class="error-messages">
+          <h4><%= pluralize(@post.errors.count, "error") %> prohibited this post from being saved:</h4>
+          <ul>
+            <% @post.errors.full_messages.each do |message| %>
+              <li><%= message %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+
+      <div class="form-group">
+        <%= form.label :title %>
+        <%= form.text_field :title, placeholder: "Enter your post title..." %>
+      </div>
+
+      <div class="form-group">
+        <%= form.label :category_id, "Category" %>
+        <%= form.select :category_id, options_from_collection_for_select(Category.all, :id, :name), 
+            { prompt: "Select a category" }, { class: "form-select" } %>
+      </div>
+
+      <div class="form-group">
+        <%= form.label :photo, "Photo (optional)" %>
+        <%= form.file_field :photo, accept: "image/*" %>
+        <small class="form-text">JPEG, PNG, or WebP. Max 5MB.</small>
+      </div>
+
+      <div class="form-group">
+        <%= form.label :content %>
+        <%= form.text_area :content, rows: 12, placeholder: "Write your post content here..." %>
+      </div>
+
+      <div class="form-group" style="display: flex; align-items: center; gap: 0.5rem;">
+        <%= form.check_box :published %>
+        <%= form.label :published, "Publish immediately" %>
+      </div>
+
+      <div class="form-actions">
+        <%= form.submit "Create Post", class: "btn btn-primary" %>
+        <%= link_to "Cancel", posts_path, class: "btn btn-secondary" %>
+      </div>
+    <% end %>
+  </div>
+</div>

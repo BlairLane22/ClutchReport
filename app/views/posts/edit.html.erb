@@ -1,0 +1,58 @@
+<% content_for :title, "Edit Post" %>
+
+<div style="max-width: 800px; margin: 0 auto;">
+  <div style="background: white; border-radius: 1rem; padding: 3rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
+    <h1 style="color: #1f2937; margin-bottom: 2rem; font-size: 2rem;">Edit Post</h1>
+
+    <%= form_with model: @post, local: true do |form| %>
+      <% if @post.errors.any? %>
+        <div class="error-messages">
+          <h4><%= pluralize(@post.errors.count, "error") %> prohibited this post from being saved:</h4>
+          <ul>
+            <% @post.errors.full_messages.each do |message| %>
+              <li><%= message %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+
+      <div class="form-group">
+        <%= form.label :title %>
+        <%= form.text_field :title %>
+      </div>
+
+      <div class="form-group">
+        <%= form.label :category_id, "Category" %>
+        <%= form.select :category_id, options_from_collection_for_select(Category.all, :id, :name, @post.category_id) %>
+      </div>
+
+      <div class="form-group">
+        <%= form.label :photo, "Photo (optional)" %>
+        <%= form.file_field :photo, accept: "image/*" %>
+        <small class="form-text">JPEG, PNG, or WebP. Max 5MB.</small>
+        <% if @post.photo.attached? %>
+          <div class="current-photo">
+            <p>Current photo:</p>
+            <%= image_tag @post.photo, alt: @post.title, class: "photo-preview" %>
+          </div>
+        <% end %>
+      </div>
+
+      <div class="form-group">
+        <%= form.label :content %>
+        <%= form.text_area :content, rows: 12 %>
+      </div>
+
+      <div class="form-group" style="display: flex; align-items: center; gap: 0.5rem;">
+        <%= form.check_box :published %>
+        <%= form.label :published, "Published" %>
+      </div>
+
+      <div class="form-actions">
+        <%= form.submit "Update Post", class: "btn btn-primary" %>
+        <%= link_to "Show", @post, class: "btn btn-secondary" %>
+        <%= link_to "Back", posts_path, class: "btn btn-secondary" %>
+      </div>
+    <% end %>
+  </div>
+</div>
