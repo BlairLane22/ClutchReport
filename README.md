@@ -1,25 +1,6 @@
 # README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
-
-Things you may want to cover:
-
-* Ruby version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
+ClutchReports is your go-to source for fresh, fast, and engaging coverage of the sports world. From breaking news and game recaps to featured highlights and in-depth analysis, we cover everything from the NHL and soccer to racing, baseball, and beyond. Whether you're a die-hard fan or a casual follower, ClutchReports delivers up-to-date stories, standout plays, and trending moments—all in one place.
 
 * ...
 # ClutchReport
